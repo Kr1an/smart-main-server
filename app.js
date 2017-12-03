@@ -2,11 +2,15 @@ const express = require('express');
 const app = express();
 const process = require('process');
 const fetch = require('node-fetch');
+const cors = require('cors')
+
+app.use(cors());
 
 const ctrlBaseUrl = 'http://192.168.1.100';
 
 const first = {
     ip: `${ctrlBaseUrl}:85`,
+    status: false,
 };
 const second = {
     ip: `${ctrlBaseUrl}:3051`,
@@ -35,7 +39,8 @@ app.get('/list', (req, res) => {
 app.get('/status/:id', (req, res) => {
     const id = +req.params.id;
     res.setHeader('Content-Type', 'application/json');
-    axios(`${ctrls[id].ip}/status`)
+    fetch(`${ctrls[id].ip}/status`)
+        .then(data => data.json())
         .then(data => res.send({ status: data.status }))
         .catch((error) => res.status(500).send({ message: 'contoller is not available' }));
 });
