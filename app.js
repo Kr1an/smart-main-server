@@ -31,6 +31,14 @@ app.get('/toggle/:id', (req, res) => {
         .catch((error) => res.status(500).send({ message: 'contoller is not available' }));
 });
 
+app.get('/setup/:id', (req, res) => {
+    const id = +req.params.id;
+    res.setHeader('Content-Type', 'application/json');
+    fetch(`${ctrls[id].ip}/setupHigh`)
+        .then((data) => res.status(200).send({ message: 'controller status toggled' }))
+        .catch((error) => res.status(500).send({ message: 'contoller is not available' }));
+});
+
 app.get('/list', (req, res) => {
     res.setHeader('Content-Type', 'application/json');
     res.send(ctrls.filter((x) => x.connected))
